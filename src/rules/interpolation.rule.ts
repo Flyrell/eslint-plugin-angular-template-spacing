@@ -41,8 +41,8 @@ export const ruleModule: TSESLint.RuleModule<string> = {
         const spacer = new InterpolationSpacer(expectWhitespace, allowNewlines);
 
         return {
-            Program(program: TSESTree.Program & { value: string }) {
-                const nodes = extractNodesFromInterpolationParent(program);
+            Program(program) {
+                const nodes = extractNodesFromInterpolationParent(program as TSESTree.Program & { value: string });
                 nodes.forEach(node => {
                     for (const location of spacer.getIncorrectLocations(node)) {
                         context.report({

@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
+    "strict": true,
     "outDir": "./dist",
     "target": "ESNext",
     "module": "ESNext",
+    "noImplicitAny": true,
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,

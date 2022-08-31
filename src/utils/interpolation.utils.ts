@@ -1,17 +1,12 @@
 import type { TSESTree } from '@typescript-eslint/utils';
 import type { Interpolation, IncompleteNode } from '@plugin/models/interpolation.model';
 
-/**
- * As compiler returns interpolations within the same parent as a single Interpolation object with children,
- * in order to get the positions and the actual "text" used to write an interpolation by iterating through the parent text.
- * While iterating, we can figure out what line and column the interpolation is on (as this is not provided as well).
- */
 export function extractNodesFromInterpolationParent(program: TSESTree.Program & { value: string }): Interpolation[] {
     let line = 1;
     let column = 0;
 
     const nodes: Interpolation[] = [];
-    let currentNode: IncompleteNode = undefined;
+    let currentNode: IncompleteNode | undefined = undefined;
     for (const part of program.value.split('\n')) {
         const startIndex = part.indexOf('{{');
         const endIndex = part.indexOf('}}');
