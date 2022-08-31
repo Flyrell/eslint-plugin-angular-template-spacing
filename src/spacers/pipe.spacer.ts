@@ -33,12 +33,11 @@ export class PipeSpacer {
 
     private *extractPipes(node: Interpolation): Iterable<Pipe> {
         for (let charIndex = 0; charIndex < node.value.length; charIndex++) {
+            const prevChar = node.value.charAt(charIndex - 1);
             const char = node.value.charAt(charIndex);
-            if (char === '|') {
-                yield {
-                    offset: charIndex,
-                    value: node.value.substring(charIndex - 1, charIndex + 2),
-                };
+            const nextChar = node.value.charAt(charIndex + 1);
+            if (char === '|' && prevChar && nextChar && prevChar !== char && nextChar !== char) {
+                yield { offset: charIndex, value: prevChar + char + nextChar };
             }
         }
     }
