@@ -1,0 +1,19 @@
+{
+  "root": true,
+  "parser": "@angular-eslint/template-parser",
+  "parserOptions": {
+    "ecmaVersion": 2021
+  },
+  "plugins": [
+    "@angular-eslint",
+    "angular-template-spacing"
+  ],
+  "ignorePatterns": ["node_modules"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@angular-eslint/template/recommended",
+//    "plugin:@angular-eslint/template/process-inline-templates",
+    "plugin:angular-template-spacing/recommended"
+  ],
+  "rules": {}
+}

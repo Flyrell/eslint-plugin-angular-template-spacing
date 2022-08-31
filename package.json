@@ -1,0 +1,53 @@
+{
+  "name": "eslint-plugin-angular-template-spacing",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "Dawid Zbiński <dawid@zbinski.dev>",
+  "description": "Plugin that offers spacing possibilities in Angular's templates using ESLint",
+  "main": "dist/index.min.js",
+  "scripts": {
+    "test": "test",
+    "build": "rollup -c",
+    "lint": "eslint examples/**/*"
+  },
+  "peerDependencies": {
+    "@angular/compiler": "^14.0.0",
+    "@angular-eslint/eslint-plugin": "^14.0.0",
+    "@angular-eslint/eslint-plugin-template": "^14.0.0",
+    "@angular-eslint/template-parser": "^14.0.0",
+    "eslint": "^8.0.0"
+  },
+  "devDependencies": {
+    "@angular/compiler": "^14.0.3",
+    "@angular-eslint/eslint-plugin": "^14.0.3",
+    "@angular-eslint/eslint-plugin-template": "^14.0.3",
+    "@angular-eslint/template-parser": "^14.0.3",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-typescript": "^8.4.0",
+    "@types/eslint": "^8.4.6",
+    "eslint": "^8.23.0",
+    "eslint-plugin-angular-template-spacing": "file:",
+    "rollup": "^2.79.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "typescript": "^4.8.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Flyrell/eslint-plugin-angular-template-spacing.git"
+  },
+  "keywords": [
+    "eslint",
+    "eslint plugin",
+    "angular spacing lint",
+    "angular template spacing",
+    "angular template eslint",
+    "angular template linter",
+    "angular interpolation",
+    "angular interpolation spacing",
+    "angular pipe spacing"
+  ],
+  "bugs": {
+    "url": "https://github.com/Flyrell/eslint-plugin-angular-template-spacing/issues"
+  },
+  "homepage": "https://github.com/Flyrell/eslint-plugin-angular-template-spacing#readme"
+}

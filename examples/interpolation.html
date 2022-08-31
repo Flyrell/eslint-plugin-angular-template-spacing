@@ -1,0 +1,34 @@
+<!-- always: incorrect, never: correct -->
+{{example}}
+{{example|pipe}}
+<div>{{example}}</div>
+<div>{{example|pipe}}</div>
+
+<!-- always: correct, never: incorrect -->
+{{ example }}
+{{ example|pipe }}
+{{ example |pipe }}
+{{ example| pipe }}
+{{ example | pipe }}
+<div>{{ example }}</div>
+<div>{{ example|pipe }}</div>
+<div>{{ example |pipe }}</div>
+<div>{{ example| pipe }}</div>
+<div>{{ example | pipe }}</div>
+
+<!-- always: incorrect, never: incorrect -->
+{{example }}
+{{example|pipe }}
+<div>{{example }}</div>
+<div>{{example|pipe }}</div>
+
+{{ example}}
+{{ example|pipe}}
+<div>{{ example}}</div>
+<div>{{ example|pipe}}</div>
+
+<!-- always: correct, never: incorrect (with allowNewlines: true) -->
+<!-- always: incorrect, never: incorrect (with allowNewlines: false) -->
+<div>{{
+    example
+}}</div>
