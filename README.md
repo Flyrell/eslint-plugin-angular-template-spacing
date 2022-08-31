@@ -27,7 +27,7 @@ You can extend the recommended set of rules which ensures spaces in interpolatio
 ```
 
 Example of correct usage of recommended rules
-```angular2html
+```html
 <div>{{ 'My text' }}</div>
 <div>{{ computedText | pipe }}</div>
 <div>{{ numericVariable | pipe1 | pipe2 }}</div>
