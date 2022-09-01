@@ -53,17 +53,20 @@ export class InterpolationSpacer {
             };
         }
 
+        const startColumn = node.location.end.column - interpolationLength - (this.expectWhitespace ? 0 : 1);
+        const endColumn = node.location.end.column - interpolationLength;
+
         return {
             ...node,
             offset: node.offset + node.value.length - interpolationLength,
             location: {
                 start: {
                     ...node.location.end,
-                    column: node.location.end.column - interpolationLength - (this.expectWhitespace ? 0 : 1),
+                    column: startColumn >= 0 ? startColumn : 0,
                 },
                 end: {
                     ...node.location.end,
-                    column: node.location.end.column - interpolationLength,
+                    column: endColumn >= 0 ? endColumn : 0,
                 },
             },
         }

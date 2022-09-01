@@ -31,27 +31,37 @@ export class PipeSpacer {
     }
 
     private *extractPipes(node: InterpolationNode): Iterable<Pipe> {
+        let line = node.location.start.line;
+        let column = node.location.start.column;
         for (let charIndex = 0; charIndex < node.value.length; charIndex++) {
             const prevChar = node.value.charAt(charIndex - 1);
             const char = node.value.charAt(charIndex);
             const nextChar = node.value.charAt(charIndex + 1);
-            if (char === '|' && prevChar && nextChar && prevChar !== char && nextChar !== char) {
-                yield { offset: charIndex, value: prevChar + char + nextChar };
+            if (char === '\n') {
+                line += 1;
+                column = 0;
+                continue;
             }
+
+            if (char === '|' && prevChar && nextChar && prevChar !== char && nextChar !== char) {
+                yield { offset: charIndex, value: prevChar + char + nextChar, startLocation: { line, column } };
+            }
+
+            column += 1;
         }
     }
 
     private generateNodeWithAbsoluteLocation(node: InterpolationNode, pipe: Pipe, relativeLocation: 'start' | 'end'): InterpolationNode {
         const isAtStart = relativeLocation === 'start';
-        let startColumn = node.location.start.column + pipe.offset + (isAtStart ? (this.expectWhitespace ? 0 : -1) : 1);
-        let endColumn = node.location.start.column + pipe.offset + (isAtStart ? 0 : (this.expectWhitespace ? 0 : 2));
+        let startColumn = pipe.startLocation.column + (isAtStart ? (this.expectWhitespace ? 0 : -1) : 1);
+        let endColumn = pipe.startLocation.column + (isAtStart ? 0 : (this.expectWhitespace ? 1 : 2));
 
         return {
             ...node,
             offset: node.offset + pipe.offset + (isAtStart ? 0 : 1),
             location: {
-                start: { ...node.location.start, column: startColumn },
-                end: { ...node.location.start, column: endColumn },
+                start: { ...pipe.startLocation, column: startColumn },
+                end: { ...pipe.startLocation, column: endColumn },
             },
         };
     }

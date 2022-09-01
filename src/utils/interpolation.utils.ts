@@ -6,7 +6,6 @@ export function* covertToInterpolationNodes(boundText: BoundText): Iterable<Inte
     let line = boundText.loc?.start?.line ?? 0;
     let column = boundText.loc?.start?.column ?? 0;
     let offset = boundText.sourceSpan?.start?.offset;
-    // offset += source.length - source.trimStart().length;
 
     let currentNode: IncompleteInterpolationNode | undefined = undefined;
     for (const part of source.trim().split('\n')) {
@@ -36,11 +35,13 @@ export function* covertToInterpolationNodes(boundText: BoundText): Iterable<Inte
         }
 
         if (endIndexExists && currentNode) {
-            currentNode.location = {
-                ...currentNode.location,
-                end: { line, column: column + endIndex + 2 },
-            };
-            yield currentNode as InterpolationNode;
+            yield {
+                ...currentNode,
+                location: {
+                    ...currentNode.location,
+                    end: { line, column: column + endIndex + 2 },
+                },
+            } as InterpolationNode;
             currentNode = undefined;
         }
 

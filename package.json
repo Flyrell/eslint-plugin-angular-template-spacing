@@ -6,29 +6,32 @@
   "description": "Plugin that offers spacing possibilities in Angular's templates using ESLint",
   "main": "dist/index.min.js",
   "scripts": {
-    "test": "test",
+    "test": "jest",
     "build": "rollup -c",
     "lint": "eslint examples/**/*"
   },
   "peerDependencies": {
-    "@angular/compiler": "^14.0.0",
     "@angular-eslint/eslint-plugin": "^14.0.0",
     "@angular-eslint/eslint-plugin-template": "^14.0.0",
     "@angular-eslint/template-parser": "^14.0.0",
+    "@angular/compiler": "^14.0.0",
     "eslint": "^8.0.0"
   },
   "devDependencies": {
-    "@angular/compiler": "^14.0.3",
     "@angular-eslint/eslint-plugin": "^14.0.3",
     "@angular-eslint/eslint-plugin-template": "^14.0.3",
     "@angular-eslint/template-parser": "^14.0.3",
+    "@angular/compiler": "^14.0.3",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-typescript": "^8.4.0",
     "@types/eslint": "^8.4.6",
+    "@types/jest": "^29.0.0",
     "eslint": "~8.22.0",
     "eslint-plugin-angular-template-spacing": "file:",
+    "jest": "^28.1.3",
     "rollup": "^2.79.0",
     "rollup-plugin-terser": "^7.0.2",
+    "ts-jest": "^28.0.8",
     "typescript": "^4.8.2"
   },
   "repository": {

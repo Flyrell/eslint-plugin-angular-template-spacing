@@ -1,9 +1,9 @@
 import { RuleValue } from '@plugin/models/options.model';
 import { PipeSpacer } from '@plugin/spacers/pipe.spacer';
 import type { TSESLint } from '@typescript-eslint/utils';
+import type { BoundAttribute } from '@plugin/models/pipe.model';
 import type { PipeRuleOptions } from '@plugin/models/options.model';
 import { convertSpanToLocation } from '@plugin/utils/conversion.utils';
-import type { ASTWithSource, ParseSourceSpan } from '@angular/compiler';
 import { covertToInterpolationNodes } from '@plugin/utils/interpolation.utils';
 import type { BoundText, InterpolationNode } from '@plugin/models/interpolation.model';
 
@@ -36,7 +36,7 @@ export const ruleModule: TSESLint.RuleModule<string> = {
     },
     create(context) {
         const { options } = context as unknown as { options: PipeRuleOptions };
-        const expectWhitespace = options[0] === RuleValue.Always ?? true;
+        const expectWhitespace = (options?.[0] ?? RuleValue.Always) === RuleValue.Always;
 
         const spacer = new PipeSpacer(expectWhitespace);
 
@@ -57,7 +57,7 @@ export const ruleModule: TSESLint.RuleModule<string> = {
                     }
                 }
             },
-            BoundAttribute({ value, valueSpan }: { value: ASTWithSource, valueSpan: ParseSourceSpan }): void {
+            BoundAttribute({ value, valueSpan }: BoundAttribute): void {
                 const interpolationNode: InterpolationNode = {
                     value: value.source ?? '',
                     offset: valueSpan.start.offset,

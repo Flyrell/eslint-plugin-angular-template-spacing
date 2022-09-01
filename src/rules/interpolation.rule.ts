@@ -44,8 +44,8 @@ export const ruleModule: TSESLint.RuleModule<string> = {
     },
     create(context) {
         const { options } = context as unknown as { options: InterpolationRuleOptions };
-        const expectWhitespace = options[0] === RuleValue.Always ?? true;
-        const { allowNewlines = true } = options[1] ?? {};
+        const expectWhitespace = (options?.[0] ?? RuleValue.Always) === RuleValue.Always;
+        const { allowNewlines = true } = options?.[1] ?? {};
 
         const spacer = new InterpolationSpacer(expectWhitespace, allowNewlines);
 

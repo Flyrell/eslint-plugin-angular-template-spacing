@@ -13,6 +13,5 @@
       "@plugin/*": ["./src/*"]
     }
   },
-  "include": ["**/*.ts"],
-  "exclude": ["**/*.spec.ts"]
+  "include": ["src/**/*.ts"]
 }
