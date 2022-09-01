@@ -1,13 +1,16 @@
-import type { TSESTree } from '@typescript-eslint/utils';
-import type { Interpolation, IncompleteNode } from '@plugin/models/interpolation.model';
+import { BoundText } from '@plugin/models/interpolation.model';
+import type { InterpolationNode, IncompleteInterpolationNode } from '@plugin/models/interpolation.model';
 
-export function extractNodesFromInterpolationParent(program: TSESTree.Program & { value: string }): Interpolation[] {
-    let line = 1;
-    let column = 0;
+export function* covertToInterpolationNodes(boundText: BoundText): Iterable<InterpolationNode> {
+    const source = boundText.value.source ?? '';
+    let line = boundText.loc?.start?.line ?? 0;
+    let column = boundText.loc?.start?.column ?? 0;
+    let offset = boundText.sourceSpan?.start?.offset;
+    // offset += source.length - source.trimStart().length;
 
-    const nodes: Interpolation[] = [];
-    let currentNode: IncompleteNode | undefined = undefined;
-    for (const part of program.value.split('\n')) {
+    let currentNode: IncompleteInterpolationNode | undefined = undefined;
+    for (const part of source.trim().split('\n')) {
+        offset += part.length || 1;
         const startIndex = part.indexOf('{{');
         const endIndex = part.indexOf('}}');
         const startIndexExists = startIndex !== -1;
@@ -22,9 +25,10 @@ export function extractNodesFromInterpolationParent(program: TSESTree.Program & 
 
         if (startIndexExists) {
             currentNode = {
+                offset: offset - (part.length - startIndex),
                 value: part.substring(startIndex, endIndexExists ? (endIndex + 2) : part.length),
                 location: {
-                    start: { line, column: startIndex },
+                    start: { line, column: column + startIndex },
                 }
             };
         } else if (currentNode) {
@@ -34,16 +38,15 @@ export function extractNodesFromInterpolationParent(program: TSESTree.Program & 
         if (endIndexExists && currentNode) {
             currentNode.location = {
                 ...currentNode.location,
-                end: { line, column: endIndex + 2 },
+                end: { line, column: column + endIndex + 2 },
             };
-            nodes.push(currentNode as Interpolation);
+            yield currentNode as InterpolationNode;
             currentNode = undefined;
         }
 
         line += 1;
         column = 0;
+        offset += 1;
         if (currentNode) currentNode.value += '\n';
     }
-
-    return nodes;
 }

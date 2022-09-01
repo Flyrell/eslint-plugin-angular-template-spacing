@@ -1,8 +1,17 @@
 import { TSESTree } from '@typescript-eslint/utils';
+import type { ASTWithSource, TmplAstBoundText, Interpolation } from '@angular/compiler';
 
-export interface Interpolation {
+export type BoundText = TmplAstBoundText & {
+    value: ASTWithSource & {
+        ast: Interpolation & { type: string };
+    };
+    loc: TSESTree.SourceLocation;
+};
+
+export interface InterpolationNode {
     value: string;
+    offset: number;
     location: TSESTree.SourceLocation;
 }
 
-export type IncompleteNode = Omit<Interpolation, 'location'> & { location: Partial<Interpolation['location']> };
+export type IncompleteInterpolationNode = Omit<InterpolationNode, 'location'> & { location: Partial<InterpolationNode['location']> };

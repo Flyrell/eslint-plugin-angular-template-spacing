@@ -1,5 +1,4 @@
-import type { TSESTree } from '@typescript-eslint/utils';
-import type { Interpolation } from '@plugin/models/interpolation.model';
+import type { InterpolationNode } from '@plugin/models/interpolation.model';
 
 export class InterpolationSpacer {
     constructor(private expectWhitespace: boolean, private allowNewlines: boolean) {}
@@ -22,43 +21,51 @@ export class InterpolationSpacer {
         return this.expectWhitespace ? new RegExp(`\{\{[^}]*${this.delimiter}}}`, 'g') : /\{\{[^}]*\S}}/g;
     }
 
-    *getIncorrectLocations(node: Interpolation): Iterable<TSESTree.SourceLocation> {
+    *getIncorrectNodesWithAbsoluteLocation(node: InterpolationNode): Iterable<InterpolationNode> {
         if (!this.checkRegExp.test(node.value)) {
             if (!this.startCheckRegExp.test(node.value)) {
-                yield this.getAbsoluteLocation(node, 'start');
+                yield this.generateNodeWithAbsoluteLocation(node, 'start');
             }
 
             if (!this.endCheckRegExp.test(node.value)) {
-                yield this.getAbsoluteLocation(node, 'end');
+                yield this.generateNodeWithAbsoluteLocation(node, 'end');
             }
         }
     }
 
-    private getAbsoluteLocation(node: Interpolation, relativeLocation: 'start' | 'end'): TSESTree.SourceLocation {
+    private generateNodeWithAbsoluteLocation(node: InterpolationNode, relativeLocation: 'start' | 'end'): InterpolationNode {
         const interpolationLength = 2;
 
         if (relativeLocation === 'start') {
             return {
-                start: {
-                    ...node.location.start,
-                    column: node.location.start.column + interpolationLength,
+                ...node,
+                offset: node.offset + interpolationLength,
+                location: {
+                    start: {
+                        ...node.location.start,
+                        column: node.location.start.column + interpolationLength,
+                    },
+                    end: {
+                        ...node.location.start,
+                        column: node.location.start.column + interpolationLength + (this.expectWhitespace ? 0 : 1),
+                    },
                 },
-                end: {
-                    ...node.location.start,
-                    column: node.location.start.column + interpolationLength + (this.expectWhitespace ? 0 : 1),
-                }
             };
         }
 
         return {
-            start: {
-                ...node.location.end,
-                column: node.location.end.column - interpolationLength - (this.expectWhitespace ? 0 : 1),
+            ...node,
+            offset: node.offset + node.value.length - interpolationLength,
+            location: {
+                start: {
+                    ...node.location.end,
+                    column: node.location.end.column - interpolationLength - (this.expectWhitespace ? 0 : 1),
+                },
+                end: {
+                    ...node.location.end,
+                    column: node.location.end.column - interpolationLength,
+                },
             },
-            end: {
-                ...node.location.end,
-                column: node.location.end.column - interpolationLength,
-            }
         }
     }
 }

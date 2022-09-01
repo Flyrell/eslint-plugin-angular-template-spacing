@@ -1,10 +1,19 @@
 import { RuleValue } from '@plugin/models/options.model';
 import { PipeSpacer } from '@plugin/spacers/pipe.spacer';
-import { convertToLocation } from '@plugin/utils/conversion.utils';
-import type { TSESLint, TSESTree } from '@typescript-eslint/utils';
+import type { TSESLint } from '@typescript-eslint/utils';
 import type { PipeRuleOptions } from '@plugin/models/options.model';
+import { convertSpanToLocation } from '@plugin/utils/conversion.utils';
 import type { ASTWithSource, ParseSourceSpan } from '@angular/compiler';
-import { extractNodesFromInterpolationParent } from '@plugin/utils/interpolation.utils';
+import { covertToInterpolationNodes } from '@plugin/utils/interpolation.utils';
+import type { BoundText, InterpolationNode } from '@plugin/models/interpolation.model';
+
+function createReport(
+    context: Parameters<TSESLint.RuleModule<string>['create']>[0],
+    node: InterpolationNode,
+    messageId: string,
+): (fix?: TSESLint.ReportFixFunction) => void {
+    return fix => context.report({ loc: node.location, messageId, fix });
+}
 
 export const ruleName = 'pipe';
 export const ruleModule: TSESLint.RuleModule<string> = {
@@ -23,8 +32,6 @@ export const ruleModule: TSESLint.RuleModule<string> = {
         messages: {
             whitespaceExtra: 'whitespace around pipe',
             whitespaceMissing: 'missing whitespace around pipe',
-            whitespaceExtra2: '222 whitespace around pipe',
-            whitespaceMissing2: '222 missing whitespace around pipe',
         },
     },
     create(context) {
@@ -34,24 +41,36 @@ export const ruleModule: TSESLint.RuleModule<string> = {
         const spacer = new PipeSpacer(expectWhitespace);
 
         return {
-            Program(program: TSESTree.Program): void {
-                const nodes = extractNodesFromInterpolationParent(program as TSESTree.Program & { value: string });
-                nodes.map(node => {
-                    for (const location of spacer.getIncorrectLocations(node)) {
-                        context.report({
-                            loc: location,
-                            messageId: expectWhitespace ? 'whitespaceMissing' : 'whitespaceExtra',
-                        });
+            BoundText(boundText: BoundText) {
+                if (boundText.value?.ast?.type !== 'Interpolation') {
+                    return;
+                }
+
+                for (const interpolationNode of covertToInterpolationNodes(boundText)) {
+                    for (const node of spacer.getIncorrectNodesWithAbsoluteLocation(interpolationNode)) {
+                        createReport(context, node, expectWhitespace ? 'whitespaceMissing' : 'whitespaceExtra')(
+                            fixer => fixer.replaceTextRange(
+                                expectWhitespace ? [node.offset, node.offset] : [node.offset, node.offset + 1],
+                                expectWhitespace ? ' ' : '',
+                            ),
+                        );
                     }
-                });
+                }
             },
             BoundAttribute({ value, valueSpan }: { value: ASTWithSource, valueSpan: ParseSourceSpan }): void {
-                const locations = spacer.getIncorrectLocations({ value: value.source ?? '', location: convertToLocation(valueSpan) });
-                for (const location of locations) {
-                    context.report({
-                        loc: location,
-                        messageId: expectWhitespace ? 'whitespaceMissing2' : 'whitespaceExtra2',
-                    });
+                const interpolationNode: InterpolationNode = {
+                    value: value.source ?? '',
+                    offset: valueSpan.start.offset,
+                    location: convertSpanToLocation(valueSpan),
+                };
+
+                for (const node of spacer.getIncorrectNodesWithAbsoluteLocation(interpolationNode)) {
+                    createReport(context, node, expectWhitespace ? 'whitespaceMissing' : 'whitespaceExtra')(
+                        fixer => fixer.replaceTextRange(
+                            expectWhitespace ? [node.offset, node.offset] : [node.offset, node.offset + 1],
+                            expectWhitespace ? ' ' : '',
+                        ),
+                    );
                 }
             }
         };

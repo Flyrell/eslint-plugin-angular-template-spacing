@@ -1,7 +1,7 @@
 import type { TSESTree } from '@typescript-eslint/utils';
 import type { ParseSourceSpan } from '@angular/compiler';
 
-export function convertToLocation(span: ParseSourceSpan): TSESTree.SourceLocation {
+export function convertSpanToLocation(span: ParseSourceSpan): TSESTree.SourceLocation {
     return {
         start: {
             column: span.start.col,
