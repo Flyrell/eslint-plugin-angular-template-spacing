@@ -9,16 +9,16 @@ export class InterpolationSpacer {
 
     get checkRegExp(): RegExp {
         return this.expectWhitespace
-            ? new RegExp(`\{\{${this.delimiter}[^}]*${this.delimiter}}}`, 'g')
-            : /\{\{\S[^}]*\S}}/g;
+            ? new RegExp(`^\{\{${this.delimiter}([\\s\\S]*?)${this.delimiter}\}\}$`, 'g')
+            : /^\{\{\S([\s\S]*?)\S}}$/g;
     }
 
     get startCheckRegExp(): RegExp {
-        return this.expectWhitespace ? new RegExp(`\{\{${this.delimiter}[^}]*}}`, 'g') : /\{\{\S[^}]*}}/g;
+        return this.expectWhitespace ? new RegExp(`^\{\{${this.delimiter}([\\s\\S]*?)\}\}$`, 'g') : /^\{\{\S([\s\S]*?)}}$/g;
     }
 
     get endCheckRegExp(): RegExp {
-        return this.expectWhitespace ? new RegExp(`\{\{[^}]*${this.delimiter}}}`, 'g') : /\{\{[^}]*\S}}/g;
+        return this.expectWhitespace ? new RegExp(`^\{\{([\\s\\S]*?)${this.delimiter}\}\}$`, 'g') : /^\{\{([\s\S]*?)\S}}$/g;
     }
 
     *getIncorrectNodesWithAbsoluteLocation(node: InterpolationNode): Iterable<InterpolationNode> {

@@ -5,44 +5,40 @@ export function* covertToInterpolationNodes(boundText: BoundText): Iterable<Inte
     const source = boundText.value.source ?? '';
     let line = boundText.loc?.start?.line ?? 0;
     let column = boundText.loc?.start?.column ?? 0;
-    let offset = boundText.sourceSpan?.start?.offset;
+    let offset = boundText.sourceSpan?.start?.offset ?? 0;
 
     let currentNode: IncompleteInterpolationNode | undefined = undefined;
     for (const part of source.trim().split('\n')) {
         offset += part.length || 1;
-        const startIndex = part.indexOf('{{');
-        const endIndex = part.indexOf('}}');
-        const startIndexExists = startIndex !== -1;
-        const endIndexExists = endIndex !== -1;
+        const split = part.split('');
+        for (let i = 0; i < split.length; i++) {
+            const char = split[i];
+            if (currentNode) {
+                currentNode.value += char;
+            }
 
-        if (!startIndexExists && !endIndexExists) {
-            line += 1;
-            column = 0;
-            if (currentNode) currentNode.value += part + '\n';
-            continue;
-        }
+            const isStart = split[i - 1] === '{' && char === '{';
+            if (isStart) {
+                currentNode = {
+                    offset: offset - (part.length - (i - 1)),
+                    value: '{{',
+                    location: {
+                        start: { line, column: column + i - 1 },
+                    },
+                };
+            }
 
-        if (startIndexExists) {
-            currentNode = {
-                offset: offset - (part.length - startIndex),
-                value: part.substring(startIndex, endIndexExists ? (endIndex + 2) : part.length),
-                location: {
-                    start: { line, column: column + startIndex },
-                }
-            };
-        } else if (currentNode) {
-            currentNode.value += part.substring(0, endIndex + 2);
-        }
-
-        if (endIndexExists && currentNode) {
-            yield {
-                ...currentNode,
-                location: {
-                    ...currentNode.location,
-                    end: { line, column: column + endIndex + 2 },
-                },
-            } as InterpolationNode;
-            currentNode = undefined;
+            const isLastConsecutiveEnding = split[i - 1] === '}' && char === '}' && split[i + 1] !== '}';
+            if (currentNode && isLastConsecutiveEnding) {
+                yield {
+                    ...currentNode,
+                    location: {
+                        ...currentNode.location,
+                        end: { line, column: column + i + 1 },
+                    },
+                } as InterpolationNode;
+                currentNode = undefined;
+            }
         }
 
         line += 1;

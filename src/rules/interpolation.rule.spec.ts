@@ -310,7 +310,7 @@ describe('Interpolation Rule', () => {
                         location: mockLocation([0, 0], [2, 8]),
                         locs: [mockLocation([0, 7], [0, 8]), mockLocation([2, 0], [2, 0])],
                     },
-                ])('should not create a report for interpolation with both sides whitespaces by \\n',
+                ])('should create a report for interpolation with both sides whitespaces by \\n',
                     ({ interpolation, location, locs }) => {
 
                         const boundText = mockBoundText(interpolation, 'Interpolation', location);

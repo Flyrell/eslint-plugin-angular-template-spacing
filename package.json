@@ -10,6 +10,7 @@
     "build": "rollup -c",
     "lint": "eslint examples/**/*"
   },
+  "files": ["LICENSE", "dist"],
   "peerDependencies": {
     "@angular-eslint/eslint-plugin": "^14.0.0",
     "@angular-eslint/eslint-plugin-template": "^14.0.0",
