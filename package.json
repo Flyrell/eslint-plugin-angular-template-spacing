@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-angular-template-spacing",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "author": "Dawid Zbiński <dawid@zbinski.dev>",
   "description": "Plugin that offers spacing possibilities in Angular's templates using ESLint",
@@ -10,7 +10,10 @@
     "build": "rollup -c",
     "lint": "eslint examples/**/*"
   },
-  "files": ["LICENSE", "dist"],
+  "files": [
+    "LICENSE",
+    "dist"
+  ],
   "peerDependencies": {
     "@angular-eslint/eslint-plugin": "^14.0.0",
     "@angular-eslint/eslint-plugin-template": "^14.0.0",
