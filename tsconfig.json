@@ -7,11 +7,14 @@
     "noImplicitAny": true,
     "moduleResolution": "Node",
     "resolveJsonModule": true,
+    "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "lib": ["es2021"],
+    "types": ["node"],
     "paths": {
       "@plugin/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.spec.ts"]
 }

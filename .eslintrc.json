@@ -1,19 +1,26 @@
 {
   "root": true,
-  "parser": "@angular-eslint/template-parser",
+  "parser": "@typescript-eslint/parser",
+  "ignorePatterns": ["**/*.js"],
   "parserOptions": {
-    "ecmaVersion": 2021
+    "ecmaVersion": "latest",
+    "project": ["tsconfig.json"]
   },
-  "plugins": [
-    "@angular-eslint",
-    "angular-template-spacing"
-  ],
-  "ignorePatterns": ["node_modules"],
-  "extends": [
-    "eslint:recommended",
-    "plugin:@angular-eslint/template/recommended",
-//    "plugin:@angular-eslint/template/process-inline-templates",
-    "plugin:angular-template-spacing/recommended"
-  ],
-  "rules": {}
+  "env": {
+    "es6": true,
+    "node": true,
+    "browser": true
+  },
+  "overrides": [
+    {
+      "files": ["*.html"],
+      "plugins": [
+        "angular-template-spacing"
+      ],
+      "extends": [
+        "plugin:angular-template-spacing/recommended"
+      ],
+      "rules": {}
+    }
+  ]
 }

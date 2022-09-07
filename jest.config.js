@@ -7,5 +7,10 @@ module.exports = {
   testEnvironment: 'node',
   moduleNameMapper: {
     ...pathsToModuleNameMapper(paths, { prefix: '<rootDir>' }),
+  },
+  globals: {
+    'ts-jest': {
+      tsconfig: 'tsconfig.spec.json'
+    }
   }
 };

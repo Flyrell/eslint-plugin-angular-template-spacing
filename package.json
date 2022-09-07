@@ -7,18 +7,17 @@
   "main": "dist/index.min.js",
   "scripts": {
     "test": "jest",
-    "build": "rollup -c",
-    "lint": "eslint examples/**/*"
+    "lint": "eslint",
+    "build": "rollup -c"
   },
   "files": [
     "LICENSE",
     "dist"
   ],
   "peerDependencies": {
-    "@angular-eslint/eslint-plugin": "^14.0.0",
-    "@angular-eslint/eslint-plugin-template": "^14.0.0",
-    "@angular-eslint/template-parser": "^14.0.0",
-    "@angular/compiler": "^14.0.0",
+    "@angular-eslint/eslint-plugin-template": ">= 12.0.0",
+    "@angular-eslint/template-parser": ">= 12.0.0",
+    "@angular/compiler": ">= 12.0.0",
     "eslint": "^8.0.0"
   },
   "devDependencies": {
@@ -26,10 +25,12 @@
     "@angular-eslint/eslint-plugin-template": "^14.0.3",
     "@angular-eslint/template-parser": "^14.0.3",
     "@angular/compiler": "^14.0.3",
+    "@angular/core": "^14.2.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-typescript": "^8.4.0",
     "@types/eslint": "^8.4.6",
     "@types/jest": "^29.0.0",
+    "@typescript-eslint/parser": "^5.36.2",
     "eslint": "~8.22.0",
     "eslint-plugin-angular-template-spacing": "file:",
     "jest": "^28.1.3",
@@ -44,14 +45,16 @@
   },
   "keywords": [
     "eslint",
+    "angular",
     "eslint plugin",
+    "angulat template",
     "angular spacing lint",
-    "angular template spacing",
     "angular template eslint",
     "angular template linter",
-    "angular interpolation",
-    "angular interpolation spacing",
-    "angular pipe spacing"
+    "angular interpolation eslint",
+    "angular interpolation linter",
+    "angular pipe liner",
+    "angular pipe eslint"
   ],
   "bugs": {
     "url": "https://github.com/Flyrell/eslint-plugin-angular-template-spacing/issues"
